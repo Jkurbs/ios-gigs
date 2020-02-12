@@ -25,7 +25,6 @@ class AuthController {
     // Sign up user
     
     func signUp(_ user: User, _ completion: @escaping(Error?) -> ()) {
-        
         /// Configure Url
         let url = baseUrl?.appendingPathComponent("/users/signup")
         /// Create request
@@ -65,5 +64,43 @@ class AuthController {
     }
     
     // Sign in user
-    
+    func signIn(_ user: User, _ completion: @escaping(Error?) -> ()) {
+        /// Configure Url
+        let url = baseUrl?.appendingPathComponent("/users/login")
+        /// Create request
+        var request = URLRequest(url: url!)
+        request.httpMethod = HTTPMETHODS.POST.rawValue
+        
+        ///Configure header
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        ///Encode user to json
+        let jsonEncoder = JSONEncoder()
+        
+        do {
+            let jsonData = try jsonEncoder.encode(user)
+            request.httpBody = jsonData
+        } catch {
+            NSLog("Error encoding data: \(error)")
+        }
+        
+        URLSession.shared.dataTask(with: request) { ( data, response, error) in
+            if let error = error  {
+                NSLog("Error with URL Session: \(error)")
+                completion(error)
+                return
+            }
+            
+            guard let data = data else { return }
+            
+            let jsonDecoder = JSONDecoder()
+            do {
+                bearer = try jsonDecoder.decode(Bearer.self, from: data)
+            } catch {
+                NSLog("Error decoding data: \(error)")
+            }
+            completion(nil)
+        }.resume()
+        
+    }
 }
