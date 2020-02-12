@@ -15,15 +15,15 @@ enum HTTPMETHODS: String {
 }
 
 
-var baseUrl = URL(string: "https://lambdagigs.vapor.cloud/api")
-
-var bearer: Bearer?
-
-
 class AuthController {
     
-    // Sign up user
+
+    var baseUrl = URL(string: "https://lambdagigs.vapor.cloud/api")
+    var bearer: Bearer?
+
     
+    // Sign up user
+
     func signUp(_ user: User, _ completion: @escaping(Error?) -> ()) {
         /// Configure Url
         let url = baseUrl?.appendingPathComponent("/users/signup")
@@ -95,7 +95,7 @@ class AuthController {
             
             let jsonDecoder = JSONDecoder()
             do {
-                bearer = try jsonDecoder.decode(Bearer.self, from: data)
+                self.bearer = try jsonDecoder.decode(Bearer.self, from: data)
             } catch {
                 NSLog("Error decoding data: \(error)")
             }
