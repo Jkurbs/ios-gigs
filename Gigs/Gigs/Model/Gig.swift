@@ -8,8 +8,8 @@
 
 import Foundation
 
-struct Gig {
-    var title: String
-    var description: String
-    var dueDate: Date
+struct Gig: Codable {
+    let title: String
+    let dueDate: Date
+    let description: String
 }
